@@ -13,9 +13,11 @@ import { CreateMachineForm } from "../components/forms/CreateMachineForm";
 import { useDeviceWidth } from "../hooks/useDeviceWidth";
 import { useScrollToBottom, useScrollToEnd } from "../hooks/useScroll";
 import { toast } from "react-hot-toast";
+import { NavLink } from "react-router-dom";
 
 const HomePage = () => {
   const machines = useSelector((state: RootState) => state.machine.machines);
+  const machinesTypes = useSelector((state: RootState) => state.machine.types);
   const dispatch = useDispatch();
 
   const deviceWidth = useDeviceWidth();
@@ -39,6 +41,23 @@ const HomePage = () => {
     dispatch(removeMachine(machineId));
   };
 
+  if (machinesTypes.length < 1)
+    return (
+      <div className="text-gray-500 h-full flex justify-center items-center">
+        <div>
+          <img
+            src="/empty.svg"
+            className="w-96 h-96 max-w-full fill-gray-600"
+          />
+          <NavLink
+            to="/type"
+            className="underline text-center mt-4 block mx-auto"
+          >
+            Click to create machine type
+          </NavLink>
+        </div>
+      </div>
+    );
   return (
     <div
       className="flex relative gap-5 sm:flex-row flex-col pb-60 overflow-x-auto min-h-full  w-full mx-auto px-2 sm:px-6 lg:px-8 mt-7"
