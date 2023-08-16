@@ -14,7 +14,7 @@ export const Button = ({
     <button
       type="button"
       className={classNames(
-        "rounded-md  block px-3 py-2 w-full text-sm font-semibold text-white shadow-sm  focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 ",
+        "rounded-md  block px-3 py-2 w-full text-sm font-semibold shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 ",
         {
           "bg-gray-50 hover:bg-gray-100 focus-visible:outline-gray-50 text-gray-700":
             kind === "normal",
