@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { XMarkIcon } from "@heroicons/react/20/solid";
 import { Machine } from "../../store/machine";
 import { RootState } from "../../store";
-import { Input, Select, Button, IconButton, Checkbox } from "../commons";
+import { Input, Select, IconButton, Checkbox } from "../commons";
 
 export type ICreateMachineForm = {
   [key: string]: string;
@@ -33,6 +33,7 @@ export const CreateMachineForm = ({
 
   const { register, handleSubmit, watch } = useForm<ICreateMachineForm>({
     defaultValues: values?.fields,
+    mode: "onBlur",
   });
 
   const handleFormSubmit = (value: ICreateMachineForm) => {
@@ -66,11 +67,12 @@ export const CreateMachineForm = ({
           />
         </div>
       )}
-      <form onSubmit={handleSubmit(handleFormSubmit)}>
+      <form onBlur={handleSubmit(handleFormSubmit)}>
         {machineTypeId && (
           <div className="space-y-5 py-4 px-4">
-            {selectedMachineType?.fields?.map(({ type, name }) =>
-              type === "checkbox" ? (
+            {selectedMachineType?.fields?.map(({ type, name }) => {
+              if (name?.length < 1) return null;
+              return type === "checkbox" ? (
                 <Checkbox label={name} {...register(name)} key={name} />
               ) : (
                 <Input
@@ -79,13 +81,8 @@ export const CreateMachineForm = ({
                   {...register(name)}
                   key={name}
                 />
-              )
-            )}
-            <div className="w-max ml-auto">
-              <Button type="submit" kind="secondary">
-                Save
-              </Button>
-            </div>
+              );
+            })}
           </div>
         )}
       </form>

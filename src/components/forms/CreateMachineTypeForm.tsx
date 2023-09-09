@@ -34,6 +34,7 @@ export const CreateMachineTypeForm = ({
     Omit<MachineType, "id">
   >({
     defaultValues: values,
+    mode: "onBlur",
   });
   const { fields, append, remove } = useFieldArray({
     control,
@@ -46,6 +47,10 @@ export const CreateMachineTypeForm = ({
       value: name,
     })) || [];
 
+  const handleRemoveField = async (index: number) => {
+    remove(index);
+    setTimeout(handleSubmit(onSubmit), 1000);
+  };
   return (
     <div className="rounded-md border max-w-full border-gray-200 w-96">
       <div className="flex items-center gap-x-4 border-b border-gray-900/5 bg-gray-50 p-6">
@@ -61,7 +66,7 @@ export const CreateMachineTypeForm = ({
         </IconButton>
       </div>
 
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onBlur={handleSubmit(onSubmit)}>
         <div className="space-y-5 py-4 px-4">
           <Input label="Object Type" {...register("objectType")} />
           <Controller
@@ -95,7 +100,10 @@ export const CreateMachineTypeForm = ({
                 />
               </div>
               <div className="flex items-center mt-2">
-                <IconButton type="button" onClick={() => remove(index)}>
+                <IconButton
+                  type="button"
+                  onClick={() => handleRemoveField(index)}
+                >
                   <TrashIcon className="w-4 h-4 fill-white" />
                 </IconButton>
               </div>
@@ -107,9 +115,6 @@ export const CreateMachineTypeForm = ({
               onClick={() => append({ name: "", type: "text" })}
             >
               Add Field
-            </Button>
-            <Button type="submit" kind="secondary">
-              Save
             </Button>
           </div>
         </div>

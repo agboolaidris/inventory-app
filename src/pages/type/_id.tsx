@@ -12,7 +12,6 @@ import { generateUniqueId } from "../../utils/generateId";
 import { CreateMachineForm } from "../../components/forms/CreateMachineForm";
 import { useDeviceWidth } from "../../hooks/useDeviceWidth";
 import { useScrollToBottom, useScrollToEnd } from "../../hooks/useScroll";
-import { toast } from "react-hot-toast";
 import { useParams } from "react-router-dom";
 
 const MachinePage = () => {
@@ -37,7 +36,6 @@ const MachinePage = () => {
   ) => {
     const machineWithId = { ...updatedMachine, id: machineId };
     dispatch(updateMachine({ id: machineId, machine: machineWithId }));
-    toast.success("Machine add successfully");
   };
 
   const handleRemoveMachine = (machineId: string) => {
@@ -46,7 +44,7 @@ const MachinePage = () => {
 
   return (
     <div
-      className="flex relative gap-5 sm:flex-row flex-col pb-60 overflow-x-auto min-h-full  w-full mx-auto px-2 sm:px-6 lg:px-8 mt-7"
+      className="flex relative gap-5 sm:flex-row flex-col pb-60  !overflow-auto min-h-full  w-full mx-auto px-2 sm:px-6 lg:px-8 mt-7"
       ref={deviceWidth > 650 ? scrollToEndRef : scrollToBottomRef}
     >
       {machines

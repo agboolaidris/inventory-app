@@ -3,7 +3,7 @@ import { Navbar } from "./Navbar";
 
 export const MainLayout = () => {
   return (
-    <div className="flex flex-col h-screen w-full overflow-hidden">
+    <div className="flex flex-col h-screen w-full">
       <Navbar />
       <>
         <Outlet />

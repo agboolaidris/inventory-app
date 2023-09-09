@@ -10,9 +10,6 @@ import {
 } from "../store/machine";
 import { generateUniqueId } from "../utils/generateId";
 import { CreateMachineForm } from "../components/forms/CreateMachineForm";
-import { useDeviceWidth } from "../hooks/useDeviceWidth";
-import { useScrollToBottom, useScrollToEnd } from "../hooks/useScroll";
-import { toast } from "react-hot-toast";
 import { NavLink } from "react-router-dom";
 
 const HomePage = () => {
@@ -20,12 +17,9 @@ const HomePage = () => {
   const machinesTypes = useSelector((state: RootState) => state.machine.types);
   const dispatch = useDispatch();
 
-  const deviceWidth = useDeviceWidth();
-  const scrollToEndRef = useScrollToEnd();
-  const scrollToBottomRef = useScrollToBottom();
-  const handleAddNewMachine = () => {
+  const handleAddNewMachine = (machineTypeId: string) => {
     const newMachineId = generateUniqueId();
-    dispatch(addNewMachine({ id: newMachineId }));
+    dispatch(addNewMachine({ id: newMachineId, machineTypeId }));
   };
 
   const handleMachineSubmit = (
@@ -34,7 +28,6 @@ const HomePage = () => {
   ) => {
     const machineWithId = { ...updatedMachine, id: machineId };
     dispatch(updateMachine({ id: machineId, machine: machineWithId }));
-    toast.success("Machine add successfully");
   };
 
   const handleRemoveMachine = (machineId: string) => {
@@ -59,27 +52,51 @@ const HomePage = () => {
       </div>
     );
   return (
-    <div
-      className="flex relative gap-5 sm:flex-row flex-col pb-60 overflow-x-auto min-h-full  w-full mx-auto px-2 sm:px-6 lg:px-8 mt-7"
-      ref={deviceWidth > 650 ? scrollToEndRef : scrollToBottomRef}
-    >
-      {machines?.map((machine) => (
-        <div key={machine.id}>
-          <CreateMachineForm
-            values={machine}
-            onSubmit={(updatedMachine) =>
-              handleMachineSubmit(machine.id, updatedMachine)
-            }
-            onRemove={() => handleRemoveMachine(machine.id)}
-          />
+    <div className="flex relative gap-5 sm:flex-row flex-col pb-60  !overflow-auto  min-h-full  w-full mx-auto px-2 sm:px-6 lg:px-8 mt-7 sm:pb-10">
+      {machinesTypes.map(({ id, objectType }) => (
+        <div key={id} className="space-y-3">
+          <div className="flex justify-between items-center">
+            <h3 className="w-80 max-w-full">{objectType}</h3>
+            <IconButton
+              className="h-max"
+              onClick={() => handleAddNewMachine(id)}
+            >
+              <PlusIcon className="w-5 h-5" />
+            </IconButton>
+          </div>
+          <div className="flex flex-col-reverse">
+            {machines?.map(
+              (machine) =>
+                machine.machineTypeId === id && (
+                  <div key={machine.id} className="pb-5">
+                    <CreateMachineForm
+                      values={machine}
+                      onSubmit={(updatedMachine) =>
+                        handleMachineSubmit(machine.id, updatedMachine)
+                      }
+                      onRemove={() => handleRemoveMachine(machine.id)}
+                    />
+                  </div>
+                )
+            )}
+          </div>
         </div>
       ))}
 
-      <div className="flex justify-end ">
-        <IconButton className="h-max" onClick={handleAddNewMachine}>
-          <PlusIcon className="w-5 h-5" />
-        </IconButton>
-      </div>
+      {machines?.map(
+        (machine) =>
+          !machine?.machineTypeId && (
+            <div key={machine.id}>
+              <CreateMachineForm
+                values={machine}
+                onSubmit={(updatedMachine) =>
+                  handleMachineSubmit(machine.id, updatedMachine)
+                }
+                onRemove={() => handleRemoveMachine(machine.id)}
+              />
+            </div>
+          )
+      )}
     </div>
   );
 };

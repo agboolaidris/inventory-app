@@ -38,7 +38,6 @@ const TypePage = () => {
     dispatch(
       updateMachineType({ id: machineTypeId, machineType: machineTypeWithId })
     );
-    toast.success("Machine type save successfully");
   };
 
   const handleRemoveMachineType = (machineTypeId: string) => {
@@ -47,7 +46,7 @@ const TypePage = () => {
 
   return (
     <div
-      className="flex relative gap-5 sm:flex-row flex-col pb-60 overflow-x-auto min-h-full  w-full mx-auto px-2 sm:px-6 lg:px-8 mt-7"
+      className="flex relative gap-5 sm:flex-row !overflow-auto  flex-col pb-60  min-h-full  w-full mx-auto px-2 sm:px-6 lg:px-8 mt-7"
       ref={deviceWidth > 650 ? scrollToEndRef : scrollToBottomRef}
     >
       {machineTypes.map((machineType) => (
